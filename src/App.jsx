@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import {useState, useRef, useEffect} from 'react';
 import BEAT_TYPES from './constants/beatTypes';
-
+import getSamples from './utils/audioEngine';
 function App() {
 
     const [tempo, setTempo] = useState(120);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
+    const [samplesLoaded, setSamplesLoaded] = useState(false);
+    const [loadingError, setLoadingError] = useState(null);
     const [track, setTrack] = useState({
         id: 'kick-track-1',
         instrument: 'kick',
@@ -16,6 +18,8 @@ function App() {
             {type: 'straight', notes: [0, 0, 0, 0]}
         ]
     });
+
+    const samplesRef = useRef(null);
 
     const toggleNote = (beatIndex, subdivisionIndex) => {
         setTrack(prevTrack => ({
@@ -67,10 +71,46 @@ function App() {
         }
     }
 
+    useEffect(() => {
+        const initAudio = async () => {
+            try {
+                const samples = await getSamples();
+                samplesRef.current = samples;
+                setSamplesLoaded(true);
+            }
+            catch (error) {
+                setLoadingError(error.message);
+            }
+        }
+        initAudio();
+    }, []);
+
+
+    if (loadingError) {
+        return (
+            <div className="App">
+                <h1>BeatGrid</h1>
+                <p style={{color: 'red'}}>Error loading samples: {loadingError}</p>
+                <p>Check the console for details.</p>
+            </div>
+        );
+    }
+
+    if (!samplesLoaded) {
+        return (
+            <div className="App">
+                <h1>BeatGrid</h1>
+                <p>Loading drum samples...</p>
+            </div>
+        );
+    }
+
+// Normal UI once loaded
     return (
         <div className="App">
             <h1>BeatGrid</h1>
-            <p>Drum sequencer coming soon...</p>
+            <p>Drum sequencer ready! ✅</p>
+            <p>Samples loaded: {Object.keys(samplesRef.current).length}</p>
         </div>
     );
 }
