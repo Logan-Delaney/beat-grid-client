@@ -70,7 +70,7 @@ const useSequencer = (track, bpm, samplesRef, isPlaying) => {
             Tone.getTransport().start();
         } else {
             if (Tone.getTransport().state === 'started') {
-                Tone.getTransport().stop();
+                Tone.getTransport().pause();
             }
         }
     }, [isPlaying, samplesRef]);

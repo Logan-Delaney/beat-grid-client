@@ -3,6 +3,7 @@ import BEAT_TYPES from './constants/beatTypes';
 import getSamples from './utils/audioEngine';
 import useSequencer from "./hooks/useSequencer.js";
 import * as Tone from 'tone';
+import Transport from './components/Transport';
 
 function App() {
 
@@ -67,7 +68,7 @@ function App() {
 
     const handleStop = () => {
         setIsPlaying(false);
-        setCurrentStep(0);
+        Tone.getTransport().stop();
     }
 
     const handleBpmChange = (newBpm) => {
@@ -116,9 +117,12 @@ function App() {
             <h1>BeatGrid</h1>
             <p>Samples loaded: {samplesLoaded ? 'Yes' : 'No'}</p>
             <p>Current Step: {currentStep}</p>
-            <button onClick={handlePlay}>
-                {isPlaying ? 'Pause' : 'Play'}
-            </button>
+            <Transport
+                isPlaying={isPlaying}
+                onPlay={handlePlay}
+                onStop={handleStop}
+                samplesLoaded={samplesLoaded}
+            />
         </div>
     );
 }
