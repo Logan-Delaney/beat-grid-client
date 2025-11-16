@@ -5,6 +5,8 @@ import useSequencer from "./hooks/useSequencer.js";
 import * as Tone from 'tone';
 import Transport from './components/Transport';
 import BPMControl from "./components/BPMControl.jsx";
+import Beat from './components/Beat';
+import './App.css';
 
 function App() {
 
@@ -128,6 +130,18 @@ function App() {
                 onStop={handleStop}
                 samplesLoaded={samplesLoaded}
             />
+            <div className="beats-container">
+                {track.beats.map((beat, i) => (
+                    <Beat
+                        track={track}
+                        beatIndex={i}
+                        onToggle={toggleNote}
+                        onTypeChange={changeBeatType}
+                        currentStep={currentStep}
+                        isPlaying={isPlaying}
+                    />
+                ))}
+            </div>
         </div>
     );
 }
