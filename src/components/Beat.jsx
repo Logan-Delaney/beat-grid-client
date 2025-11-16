@@ -1,10 +1,13 @@
 import React from "react";
+import BEAT_TYPES from "../constants/beatTypes.js";
 import './Beat.css';
 
-function Beat({ track, beatIndex, onToggle, onTypeChange, currentStep, isPlaying }) {
+function Beat({ tracks, trackIndex, beatIndex, onToggle, onTypeChange, currentStep, isPlaying }) {
+    const track = tracks[trackIndex];
     const beat = track.beats[beatIndex];
 
     const getLocalStepIndex = () => {
+        // Count steps from all previous beats in THIS track
         let stepCounter = 0;
         for (let i = 0; i < beatIndex; i++) {
             stepCounter += track.beats[i].notes.length;
@@ -20,11 +23,11 @@ function Beat({ track, beatIndex, onToggle, onTypeChange, currentStep, isPlaying
     }
 
     const handleCellClick = (subdivisionIndex) => {
-        onToggle(beatIndex, subdivisionIndex);
+        onToggle(trackIndex, beatIndex, subdivisionIndex);
     }
 
     const handleTypeChange = (event) => {
-        onTypeChange(beatIndex, event.target.value);
+        onTypeChange(trackIndex, beatIndex, event.target.value);
     }
 
     const localStep = getLocalStepIndex();
@@ -32,7 +35,7 @@ function Beat({ track, beatIndex, onToggle, onTypeChange, currentStep, isPlaying
     return (
         <div className="beat-container">
             <div className="beat-header">
-                <label className="beat-label">{beatIndex + 1}</label>
+                <label className="beat-label">Beat {beatIndex + 1}</label>
                 <select
                     className="beat-type-selector"
                     value={beat.type}
