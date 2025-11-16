@@ -1,5 +1,5 @@
 const BEAT_TYPES = {
-    sixteenth: {
+    straight: {
         subdivisions: 4,
         duration: '16n'
     },
