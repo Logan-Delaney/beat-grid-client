@@ -8,20 +8,20 @@ const useSequencer = (track, bpm, samplesRef, isPlaying) => {
 
     const buildEvents = (track) => {
         let events = [];
-        let currentTime = 0;
         let stepCounter = 0;
 
         for (let i = 0; i < track.beats.length; i++) {
             const beat = track.beats[i];
             const beatType = BEAT_TYPES[beat.type];
-            const subdivisions = beatType.subdivisions;
-            const subdivisionDuration = 1 / subdivisions;
+            const duration = beatType.duration;
 
             for (let j = 0; j < beat.notes.length; j++) {
-                let noteTime = currentTime + (j * subdivisionDuration);
                 if (beat.notes[j] === 1){
                     let event = {
-                        time : noteTime.toFixed(3) + 'i',
+                        time: {
+                            '4n': i,
+                            [duration]: j
+                        },
                         instrument: track.instrument,
                         stepNumber: stepCounter,
                     }
@@ -29,7 +29,6 @@ const useSequencer = (track, bpm, samplesRef, isPlaying) => {
                 }
                 stepCounter++;
             }
-            currentTime += 1;
         }
         return events;
     }
@@ -38,7 +37,7 @@ const useSequencer = (track, bpm, samplesRef, isPlaying) => {
         if (!isPlaying || !samplesRef.current) return;
 
         const transport = Tone.getTransport();
-        transport.bpm.value = bpm;
+        transport.bpm.value = parseInt(bpm);
 
         const events = buildEvents(track);
         console.log('Built events:', events);
@@ -50,7 +49,7 @@ const useSequencer = (track, bpm, samplesRef, isPlaying) => {
         }, events);
 
         part.loop = true;
-        part.loopEnd = 4;
+        part.loopEnd = "1:0:0";
         part.loopStart = 0;
         part.start(0);
         partRef.current = part;

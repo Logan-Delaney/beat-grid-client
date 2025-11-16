@@ -1,0 +1,16 @@
+.bpm-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bpm-input {
+    width: 60px;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.bpm-slider {
+    flex: 1;
+    min-width: 150px;
+}

@@ -4,6 +4,7 @@ import getSamples from './utils/audioEngine';
 import useSequencer from "./hooks/useSequencer.js";
 import * as Tone from 'tone';
 import Transport from './components/Transport';
+import BPMControl from "./components/BPMControl.jsx";
 
 function App() {
 
@@ -17,7 +18,7 @@ function App() {
         beats: [
             {type: 'straight', notes: [1, 0, 0, 0]},
             {type: 'straight', notes: [1, 0, 0, 0]},
-            {type: 'straight', notes: [1, 0, 0, 0]},
+            {type: 'triplet', notes: [1, 1, 1]},
             {type: 'straight', notes: [1, 0, 0, 0]}
         ]
     });
@@ -117,6 +118,10 @@ function App() {
             <h1>BeatGrid</h1>
             <p>Samples loaded: {samplesLoaded ? 'Yes' : 'No'}</p>
             <p>Current Step: {currentStep}</p>
+            <BPMControl
+                bpm={tempo}
+                onBpmChange={handleBpmChange}
+            />
             <Transport
                 isPlaying={isPlaying}
                 onPlay={handlePlay}
