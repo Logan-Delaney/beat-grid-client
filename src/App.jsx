@@ -20,7 +20,7 @@ function App() {
         beats: [
             {type: 'straight', notes: [1, 0, 0, 0]},
             {type: 'straight', notes: [1, 0, 0, 0]},
-            {type: 'triplet', notes: [1, 1, 1]},
+            {type: 'straight', notes: [1, 0, 0, 0]},
             {type: 'straight', notes: [1, 0, 0, 0]}
         ]
     });
@@ -116,32 +116,40 @@ function App() {
 
 // Normal UI once loaded
     return (
-        <div>
-            <h1>BeatGrid</h1>
-            <p>Samples loaded: {samplesLoaded ? 'Yes' : 'No'}</p>
-            <p>Current Step: {currentStep}</p>
-            <BPMControl
-                bpm={tempo}
-                onBpmChange={handleBpmChange}
-            />
-            <Transport
-                isPlaying={isPlaying}
-                onPlay={handlePlay}
-                onStop={handleStop}
-                samplesLoaded={samplesLoaded}
-            />
-            <div className="beats-container">
-                {track.beats.map((beat, i) => (
-                    <Beat
-                        track={track}
-                        beatIndex={i}
-                        onToggle={toggleNote}
-                        onTypeChange={changeBeatType}
-                        currentStep={currentStep}
-                        isPlaying={isPlaying}
+        <div className="App">
+            <header className="app-header">
+                <h1 className="app-title">Beat Grids</h1>
+            </header>
+
+            <main className="app-content">
+                <section className="controls-section">
+                    <BPMControl
+                        bpm={tempo}
+                        onBpmChange={handleBpmChange}
                     />
-                ))}
-            </div>
+                    <Transport
+                        isPlaying={isPlaying}
+                        onPlay={handlePlay}
+                        onStop={handleStop}
+                        samplesLoaded={samplesLoaded}
+                    />
+                </section>
+
+                <section className="sequencer-section">
+                    <div className="beats-container">
+                        {track.beats.map((beat, i) => (
+                            <Beat
+                                track={track}
+                                beatIndex={i}
+                                onToggle={toggleNote}
+                                onTypeChange={changeBeatType}
+                                currentStep={currentStep}
+                                isPlaying={isPlaying}
+                            />
+                        ))}
+                    </div>
+                </section>
+            </main>
         </div>
     );
 }
