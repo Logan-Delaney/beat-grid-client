@@ -6,6 +6,7 @@ function BPMControl({ bpm, onBpmChange }) {
 
     const handleSliderChange = (event) => {
         const newBPM = parseInt(event.target.value, 10);
+        setValue(newBPM);
         onBpmChange(newBPM);
     }
 
