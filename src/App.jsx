@@ -127,7 +127,7 @@ function App() {
 
                 <section className="sequencer-section">
                     <div className="sequencer-header">
-                        <h2 className="sequencer-title">Drum Pattern</h2>
+                        <h2 className="sequencer-title">Sequencer</h2>
                         <p className="sequencer-subtitle">Click cells to toggle notes • Change beat types for mixed rhythms</p>
                     </div>
 

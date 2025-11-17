@@ -2,6 +2,7 @@ import React from "react";
 import './BPMControl.css';
 
 function BPMControl({ bpm, onBpmChange }) {
+    const [value, setValue] = React.useState(bpm);
 
     const handleSliderChange = (event) => {
         const newBPM = parseInt(event.target.value, 10);
@@ -9,16 +10,22 @@ function BPMControl({ bpm, onBpmChange }) {
     }
 
     const handleInputChange = (event) => {
-        let newBPM = parseInt(event.target.value, 10);
+        let newBPM = event.target.value;
+        setValue(newBPM);
+    }
 
-        if (event.target.value === '') return;
-
-        if (isNaN(newBPM)) return;
-
-        if (newBPM < 60) newBPM = 60;
-        if (newBPM > 250) newBPM = 250;
-
-        onBpmChange(newBPM);
+    const handleBlur = () => {
+        let num = Number(value);
+        if (Number.isNaN(num)) {
+            setValue(120);
+        }
+        if (num < 60){
+            setValue(60);
+        }
+        if (num > 250){
+            setValue(250);
+        }
+        onBpmChange(value);
     }
 
     return (
@@ -29,8 +36,9 @@ function BPMControl({ bpm, onBpmChange }) {
                 type="number"
                 min={60}
                 max={250}
-                value={bpm}
+                value={value}
                 onChange={handleInputChange}
+                onBlur={handleBlur}
                 className="bpm-input"
             />
 

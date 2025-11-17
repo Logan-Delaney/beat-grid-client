@@ -89,6 +89,8 @@ body {
     padding: 30px;
     border: 1px solid #333;
     backdrop-filter: blur(10px);
+    overflow-x: auto;
+    scroll-behavior: smooth;
 }
 
 .sequencer-header {
@@ -114,9 +116,10 @@ body {
     display: flex;
     align-items: center;
     gap: 0;
+    flex-wrap: nowrap;
     margin-bottom: 0;
     padding: 0 0;
-    border-bottom: 1px solid rgba(68, 68, 68, 0.3);
+    border-bottom: 1px solid rgba(68, 68, 68, 0.9);
 }
 
 .track-row:last-child {
@@ -126,7 +129,7 @@ body {
 
 .track-label {
     min-width: 100px;
-    font-size: 10px;
+    font-size: 8px;
     font-weight: 600;
     color: #ffffff;
     text-transform: uppercase;
@@ -141,8 +144,10 @@ body {
 /* Beats Container */
 .beats-container {
     display: flex;
+    height: 100%;
+    flex-wrap: nowrap;
     gap: 0;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 0;
     background-color: transparent;
     border-radius: 0;
@@ -181,7 +186,7 @@ body {
 /* Responsive Design */
 @media (max-width: 1200px) {
     .beats-container {
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
     }
 }
 
