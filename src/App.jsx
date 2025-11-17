@@ -6,6 +6,7 @@ import Beat from './components/Beat';
 import getSamples from './utils/audioEngine';
 import useSequencer from './hooks/useSequencer';
 import * as Tone from 'tone';
+import Footer from "./components/Footer.jsx";
 
 function App() {
     const [samplesLoaded, setSamplesLoaded] = useState(false);
@@ -151,6 +152,7 @@ function App() {
                         </div>
                     ))}
                 </section>
+                <Footer />
             </main>
         </div>
     );

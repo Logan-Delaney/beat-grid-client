@@ -28,26 +28,26 @@
     letter-spacing: 1px;
 }
 
-.beat-type-selector {
-    padding: 6px 12px;
+.beat-type-toggle {
+    padding: 4px 6px;
     border-radius: 6px;
     border: 1px solid #444;
     background-color: #1a1a1a;
     color: #ffffff;
-    font-size: 10px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    min-width: 40px;
+    width: 30px;
     text-align: center;
 }
 
-.beat-type-selector:hover {
+.beat-type-toggle:hover {
     background-color: #252525;
-    border-color: #555;
+    border-color: #4a9eff;
 }
 
-.beat-type-selector:focus {
+.beat-type-toggle:focus {
     outline: none;
     border-color: #4a9eff;
     box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);

@@ -36,14 +36,16 @@ function Beat({ tracks, trackIndex, beatIndex, onToggle, onTypeChange, currentSt
         <div className="beat-container">
             <div className="beat-header">
                 <label className="beat-label">Beat {beatIndex + 1}</label>
-                <select
-                    className="beat-type-selector"
-                    value={beat.type}
-                    onChange={handleTypeChange}
+                <button
+                    className="beat-type-toggle"
+                    onClick={() => {
+                        const newType = beat.type === 'straight' ? 'triplet' : 'straight';
+                        handleTypeChange({ target: { value: newType } });
+                    }}
+                    aria-label={`Switch to ${beat.type === 'straight' ? 'triplet' : 'straight'}`}
                 >
-                    <option value="straight">Straight</option>
-                    <option value="triplet">Triplet</option>
-                </select>
+                    {beat.type === 'straight' ? '3' : '4'}
+                </button>
             </div>
 
             <div className="beat-grid">
