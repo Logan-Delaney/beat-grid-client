@@ -3,92 +3,18 @@ import './App.css';
 import Transport from './components/Transport';
 import BPMControl from './components/BPMControl';
 import Beat from './components/Beat';
-import getSamples from './utils/audioEngine';
 import useSequencer from './hooks/useSequencer';
 import * as Tone from 'tone';
 import Footer from "./components/Footer.jsx";
+import { useAudioSamples } from "./hooks/useAudioSamples.js";
+import { useTracks } from "./hooks/useTracks.js";
+import {useTransport} from "./hooks/useTransport.js";
 
 function App() {
-    const [samplesLoaded, setSamplesLoaded] = useState(false);
-    const [samplesRef, setSamplesRef] = useState({ current: null });
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [tempo, setTempo] = useState(120);
-    const [tracks, setTracks] = useState([]);
-
+    const { samplesRef, samplesLoaded} = useAudioSamples();
+    const { tracks, toggleNote, changeBeatType } = useTracks(samplesRef, samplesLoaded);
+    const { isPlaying, tempo, play, stop, setBpm } = useTransport(120)
     const { currentStep } = useSequencer(tracks, tempo, samplesRef, isPlaying);
-
-    React.useEffect(() => {
-        const loadAudio = async () => {
-            const samples = await getSamples();
-            samplesRef.current = samples;
-            setSamplesRef({ current: samples });
-
-            // Dynamically create tracks based on loaded samples
-            const instrumentNames = Object.keys(samples);
-            const generatedTracks = instrumentNames.map((instrumentName, index) => ({
-                id: `${instrumentName}-track-${index}`,
-                instrument: instrumentName,
-                beats: [
-                    { type: 'straight', notes: [0, 0, 0, 0] },
-                    { type: 'straight', notes: [0, 0, 0, 0] },
-                    { type: 'straight', notes: [0, 0, 0, 0] },
-                    { type: 'straight', notes: [0, 0, 0, 0] }
-                ]
-            }));
-
-            setTracks(generatedTracks);
-            setSamplesLoaded(true);
-        };
-        loadAudio();
-    }, []);
-
-    const toggleNote = (trackIndex, beatIndex, subdivisionIndex) => {
-        setTracks(prevTracks => {
-            const newTracks = [...prevTracks];
-            newTracks[trackIndex] = { ...prevTracks[trackIndex] };
-            newTracks[trackIndex].beats = [...prevTracks[trackIndex].beats];
-            newTracks[trackIndex].beats[beatIndex] = { ...prevTracks[trackIndex].beats[beatIndex] };
-            newTracks[trackIndex].beats[beatIndex].notes = [...prevTracks[trackIndex].beats[beatIndex].notes];
-            newTracks[trackIndex].beats[beatIndex].notes[subdivisionIndex] =
-                prevTracks[trackIndex].beats[beatIndex].notes[subdivisionIndex] === 1 ? 0 : 1;
-            return newTracks;
-        });
-    };
-
-    const changeBeatType = (trackIndex, beatIndex, newType) => {
-        setTracks(prevTracks => {
-            const newTracks = [...prevTracks];
-            newTracks[trackIndex] = { ...prevTracks[trackIndex] };
-            newTracks[trackIndex].beats = [...prevTracks[trackIndex].beats];
-
-            const subdivisions = newType === 'straight' ? 4 : 3;
-            newTracks[trackIndex].beats[beatIndex] = {
-                type: newType,
-                notes: new Array(subdivisions).fill(0)
-            };
-
-            return newTracks;
-        });
-    };
-
-    const handlePlay = () => {
-        if (!isPlaying) {
-            setIsPlaying(true);
-        } else {
-            setIsPlaying(false);
-        }
-    };
-
-    const handleStop = () => {
-        setIsPlaying(false);
-        Tone.getTransport().stop();
-    };
-
-    const handleBpmChange = (newBpm) => {
-        if (newBpm >= 60 && newBpm <= 250) {
-            setTempo(newBpm);
-        }
-    };
 
     if (!samplesLoaded) {
         return (
@@ -112,8 +38,8 @@ function App() {
                     <div className="transport-wrapper">
                         <Transport
                             isPlaying={isPlaying}
-                            onPlay={handlePlay}
-                            onStop={handleStop}
+                            onPlay={play}
+                            onStop={stop}
                             samplesLoaded={samplesLoaded}
                         />
                     </div>
@@ -122,7 +48,7 @@ function App() {
 
                     <BPMControl
                         bpm={tempo}
-                        onBpmChange={handleBpmChange}
+                        onBpmChange={setBpm}
                     />
                 </section>
 
