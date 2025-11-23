@@ -5,11 +5,12 @@ export const createEmptyBeats = (count = 4) => {
     }));
 };
 
-export const generateTracksFromSamples = (samples) => {
+export const generateTracksFromSamples = (samples, measures) => {
+    const beats = measures * 4;
     const instrumentNames = Object.keys(samples);
     return instrumentNames.map((instrumentName, index) => ({
         id: `${instrumentName}-track-${index}`,
         instrument: instrumentName,
-        beats: createEmptyBeats(4)
+        beats: createEmptyBeats(beats)
     }));
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import Transport from './components/Transport';
 import BPMControl from './components/BPMControl';
@@ -9,12 +9,13 @@ import Footer from "./components/Footer.jsx";
 import { useAudioSamples } from "./hooks/useAudioSamples.js";
 import { useTracks } from "./hooks/useTracks.js";
 import {useTransport} from "./hooks/useTransport.js";
+import MeasureControl from "./components/MeasureControl.jsx";
 
 function App() {
     const { samplesRef, samplesLoaded} = useAudioSamples();
-    const { tracks, toggleNote, changeBeatType } = useTracks(samplesRef, samplesLoaded);
-    const { isPlaying, tempo, play, stop, setBpm } = useTransport(120)
-    const { currentStep } = useSequencer(tracks, tempo, samplesRef, isPlaying);
+    const { isPlaying, tempo, play, stop, setBpm, measures, setBars } = useTransport(120, 1)
+    const { tracks, toggleNote, changeBeatType } = useTracks(samplesRef, samplesLoaded, measures);
+    const { currentStep } = useSequencer(tracks, tempo, samplesRef, isPlaying, measures);
 
     if (!samplesLoaded) {
         return (
@@ -50,33 +51,44 @@ function App() {
                         bpm={tempo}
                         onBpmChange={setBpm}
                     />
+
+                    <div className="divider"></div>
+
+                    <MeasureControl
+                        measures={measures}
+                        onMeasuresChange={setBars}
+                    />
                 </section>
 
                 <section className="sequencer-section">
-                    <div className="sequencer-header">
-                        <h2 className="sequencer-title">Sequencer</h2>
-                        <p className="sequencer-subtitle">Click cells to toggle notes • Change beat types for mixed rhythms</p>
-                    </div>
-
-                    {tracks.map((track, trackIndex) => (
-                        <div key={track.id} className="track-row">
-                            <div className="track-label">{track.instrument}</div>
-                            <div className="beats-container">
-                                {track.beats.map((beat, beatIndex) => (
-                                    <Beat
-                                        key={beatIndex}
-                                        tracks={tracks}
-                                        trackIndex={trackIndex}
-                                        beatIndex={beatIndex}
-                                        onToggle={toggleNote}
-                                        onTypeChange={changeBeatType}
-                                        currentStep={currentStep}
-                                        isPlaying={isPlaying}
-                                    />
-                                ))}
-                            </div>
+                    <div className="sequencer-inner">
+                        <div className="sequencer-header">
+                            <h2 className="sequencer-title">Sequencer</h2>
+                            <p className="sequencer-subtitle">Click cells to toggle notes • Change beat types for mixed rhythms</p>
                         </div>
-                    ))}
+
+                        {tracks.map((track, trackIndex) => (
+                            <div key={track.id} className="track-row">
+                                <div className="track-label-wrapper">
+                                    <div className="track-label">{track.instrument}</div>
+                                </div>
+                                <div className="beats-container">
+                                    {track.beats.map((beat, beatIndex) => (
+                                        <Beat
+                                            key={beatIndex}
+                                            tracks={tracks}
+                                            trackIndex={trackIndex}
+                                            beatIndex={beatIndex}
+                                            onToggle={toggleNote}
+                                            onTypeChange={changeBeatType}
+                                            currentStep={currentStep}
+                                            isPlaying={isPlaying}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </section>
                 <Footer />
             </main>

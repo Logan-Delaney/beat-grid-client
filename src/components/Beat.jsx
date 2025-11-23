@@ -32,10 +32,14 @@ function Beat({ tracks, trackIndex, beatIndex, onToggle, onTypeChange, currentSt
 
     const localStep = getLocalStepIndex();
 
+    const beatNumber = ((beatIndex + 1) % 4) || 4;        // cycles 1–4
+    const isFirstBeat = beatNumber === 1;
+    const barNumber = (beatIndex + 4) / 4;
+
     return (
         <div className="beat-container">
             <div className="beat-header">
-                <label className="beat-label">Beat {beatIndex + 1}</label>
+                <label className={`beat-label ${isFirstBeat ? 'beat-label--measure-start' : ''}`}>{isFirstBeat ? `Bar ${barNumber}` : `Beat ${beatNumber}`}</label>
                 <button
                     className="beat-type-toggle"
                     onClick={() => {

@@ -1,9 +1,10 @@
 import { useState, useCallback } from 'react';
 import * as Tone from 'tone';
 
-export const useTransport = (initialBpm = 120) => {
+export const useTransport = (initialBpm = 120, initialMeasures = 1) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [tempo, setTempo] = useState(initialBpm);
+    const[measures, setMeasures] = useState(initialMeasures);
 
     const play = useCallback(() => {
         if (!isPlaying) {
@@ -24,11 +25,19 @@ export const useTransport = (initialBpm = 120) => {
         }
     }, []);
 
+    const setBars = useCallback((newMeasures) => {
+        if (newMeasures >= 1 && newMeasures <= 4) {
+            setMeasures(newMeasures);
+        }
+    }, []);
+
     return {
         isPlaying,
         tempo,
         play,
         stop,
-        setBpm
+        setBpm,
+        measures,
+        setBars
     };
 };
