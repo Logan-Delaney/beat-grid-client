@@ -26,7 +26,7 @@ export const useTransport = (initialBpm = 120, initialMeasures = 1) => {
     }, []);
 
     const setBars = useCallback((newMeasures) => {
-        if (newMeasures >= 1 && newMeasures <= 4) {
+        if (newMeasures >= 1 && newMeasures <= 16) {
             setMeasures(newMeasures);
         }
     }, []);
