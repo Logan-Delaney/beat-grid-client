@@ -4,7 +4,6 @@ import Transport from './components/Transport';
 import BPMControl from './components/BPMControl';
 import Beat from './components/Beat';
 import useSequencer from './hooks/useSequencer';
-import * as Tone from 'tone';
 import Footer from "./components/Footer.jsx";
 import { useAudioSamples } from "./hooks/useAudioSamples.js";
 import { useTracks } from "./hooks/useTracks.js";
