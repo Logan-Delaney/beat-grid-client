@@ -10,11 +10,12 @@ import { useAudioSamples } from "./hooks/useAudioSamples.js";
 import { useTracks } from "./hooks/useTracks.js";
 import {useTransport} from "./hooks/useTransport.js";
 import MeasureControl from "./components/MeasureControl.jsx";
+import Clear from "./components/Clear.jsx";
 
 function App() {
     const { samplesRef, samplesLoaded} = useAudioSamples();
     const { isPlaying, tempo, play, stop, setBpm, measures, setBars } = useTransport(120, 1)
-    const { tracks, toggleNote, changeBeatType } = useTracks(samplesRef, samplesLoaded, measures);
+    const { tracks, toggleNote, changeBeatType, clearTracks } = useTracks(samplesRef, samplesLoaded, measures);
     const { currentStep } = useSequencer(tracks, tempo, samplesRef, isPlaying, measures);
 
     if (!samplesLoaded) {
@@ -63,8 +64,11 @@ function App() {
                 <section className="sequencer-section">
                     <div className="sequencer-inner">
                         <div className="sequencer-header">
-                            <h2 className="sequencer-title">Sequencer</h2>
-                            <p className="sequencer-subtitle">Click cells to toggle notes • Change beat types for mixed rhythms</p>
+                            <div className="sequencer-inner-header">
+                                <h2 className="sequencer-title">Sequencer</h2>
+                                <p className="sequencer-subtitle">Click cells to toggle notes</p>
+                            </div>
+                            <Clear onClear={clearTracks} />
                         </div>
 
                         {tracks.map((track, trackIndex) => (

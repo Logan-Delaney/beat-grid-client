@@ -20,5 +20,9 @@ export const useTracks = (samplesRef, samplesLoaded, measures) => {
         setTracks(prev => changeBeatTypeInTracks(prev, trackIndex, beatIndex, newType));
     }, []);
 
-    return { tracks, setTracks, toggleNote, changeBeatType };
+    const clearTracks = useCallback(() => {
+        setTracks(generateTracksFromSamples(samplesRef.current, measures));
+    }, [samplesRef, measures]);
+
+    return { tracks, setTracks, toggleNote, changeBeatType, clearTracks };
 };

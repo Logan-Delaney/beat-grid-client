@@ -1,0 +1,29 @@
+.clear-button {
+    padding: 10px 24px;
+    font-size: 10px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background-color: #ff4a4a;
+    color: #ffffff;
+}
+
+.clear-button:hover {
+    background-color: #ff6a6a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 74, 74, 0.3);
+}
+
+.clear-button:active {
+    transform: translateY(0);
+}
+
+.clear-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 74, 74, 0.2);
+}
