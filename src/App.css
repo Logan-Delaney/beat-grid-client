@@ -234,9 +234,6 @@ body {
     }
 
     .sequencer-header {
-        flex-direction: column;
-        align-items: start;
-        justify-content: center;
     }
 
     .sequencer-inner-header {
