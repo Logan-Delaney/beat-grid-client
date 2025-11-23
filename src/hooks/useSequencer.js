@@ -2,7 +2,7 @@ import {useState, useRef, useEffect} from 'react';
 import * as Tone from 'tone';
 import BEAT_TYPES from '../constants/beatTypes';
 
-const useSequencer = (track, bpm, samplesRef, isPlaying, measures) => {
+const useSequencer = (track, bpm, samplesRef, synthsRef, isPlaying, measures) => {
     const [currentStep, setCurrentStep] = useState(0);
     const partRef = useRef(null);
 
@@ -40,7 +40,7 @@ const useSequencer = (track, bpm, samplesRef, isPlaying, measures) => {
     }
 
     useEffect(() => {
-        if (!isPlaying || !samplesRef.current) return;
+        if (!isPlaying || !samplesRef.current || !synthsRef.current) return;
 
         const transport = Tone.getTransport();
         transport.bpm.value = parseInt(bpm);
@@ -50,8 +50,18 @@ const useSequencer = (track, bpm, samplesRef, isPlaying, measures) => {
 
         const part = new Tone.Part((time, event) => {
             console.log('Event fired at time:', time, 'event:', event);
-            samplesRef.current[event.instrument].start(time);
-            setCurrentStep(event.stepNumber);
+            if (samplesRef.current[event.instrument]) {
+                samplesRef.current[event.instrument].start(time);
+                setCurrentStep(event.stepNumber);
+            }
+            else if (synthsRef.current[event.instrument]) {
+                synthsRef.current[event.instrument].triggerAttackRelease(
+                    event.pitch || 'C2',
+                    '8n',
+                    time,
+                );
+                setCurrentStep(event.stepNumber);
+            }
         }, events);
 
         part.loop = true;
@@ -66,10 +76,10 @@ const useSequencer = (track, bpm, samplesRef, isPlaying, measures) => {
                 partRef.current = null;
             }
         };
-    }, [track, bpm, samplesRef, isPlaying, measures]);
+    }, [track, bpm, samplesRef, synthsRef, isPlaying, measures]);
 
     useEffect(() => {
-        if (!samplesRef.current) return;
+        if (!samplesRef.current || !synthsRef.current) return;
 
         if (isPlaying) {
             Tone.getTransport().start();
@@ -78,7 +88,7 @@ const useSequencer = (track, bpm, samplesRef, isPlaying, measures) => {
                 Tone.getTransport().pause();
             }
         }
-    }, [isPlaying, samplesRef]);
+    }, [isPlaying, samplesRef, synthsRef]);
 
     return { currentStep }
 };

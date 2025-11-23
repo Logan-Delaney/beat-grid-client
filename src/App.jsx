@@ -13,10 +13,10 @@ import MeasureControl from "./components/MeasureControl.jsx";
 import Clear from "./components/Clear.jsx";
 
 function App() {
-    const { samplesRef, samplesLoaded} = useAudioSamples();
+    const { samplesRef, synthsRef, samplesLoaded, synthsLoaded} = useAudioSamples();
     const { isPlaying, tempo, play, stop, setBpm, measures, setBars } = useTransport(120, 1)
-    const { tracks, toggleNote, changeBeatType, clearTracks } = useTracks(samplesRef, samplesLoaded, measures);
-    const { currentStep } = useSequencer(tracks, tempo, samplesRef, isPlaying, measures);
+    const { tracks, toggleNote, changeBeatType, clearTracks } = useTracks(samplesRef, synthsRef, samplesLoaded, synthsLoaded, measures);
+    const { currentStep } = useSequencer(tracks, tempo, samplesRef, synthsRef, isPlaying, measures);
 
     if (!samplesLoaded) {
         return (
