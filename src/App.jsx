@@ -1,94 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import Transport from './components/Transport';
 import BPMControl from './components/BPMControl';
 import Beat from './components/Beat';
-import getSamples from './utils/audioEngine';
 import useSequencer from './hooks/useSequencer';
 import * as Tone from 'tone';
 import Footer from "./components/Footer.jsx";
+import { useAudioSamples } from "./hooks/useAudioSamples.js";
+import { useTracks } from "./hooks/useTracks.js";
+import {useTransport} from "./hooks/useTransport.js";
+import MeasureControl from "./components/MeasureControl.jsx";
+import Clear from "./components/Clear.jsx";
 
 function App() {
-    const [samplesLoaded, setSamplesLoaded] = useState(false);
-    const [samplesRef, setSamplesRef] = useState({ current: null });
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [tempo, setTempo] = useState(120);
-    const [tracks, setTracks] = useState([]);
-
-    const { currentStep } = useSequencer(tracks, tempo, samplesRef, isPlaying);
-
-    React.useEffect(() => {
-        const loadAudio = async () => {
-            const samples = await getSamples();
-            samplesRef.current = samples;
-            setSamplesRef({ current: samples });
-
-            // Dynamically create tracks based on loaded samples
-            const instrumentNames = Object.keys(samples);
-            const generatedTracks = instrumentNames.map((instrumentName, index) => ({
-                id: `${instrumentName}-track-${index}`,
-                instrument: instrumentName,
-                beats: [
-                    { type: 'straight', notes: [0, 0, 0, 0] },
-                    { type: 'straight', notes: [0, 0, 0, 0] },
-                    { type: 'straight', notes: [0, 0, 0, 0] },
-                    { type: 'straight', notes: [0, 0, 0, 0] }
-                ]
-            }));
-
-            setTracks(generatedTracks);
-            setSamplesLoaded(true);
-        };
-        loadAudio();
-    }, []);
-
-    const toggleNote = (trackIndex, beatIndex, subdivisionIndex) => {
-        setTracks(prevTracks => {
-            const newTracks = [...prevTracks];
-            newTracks[trackIndex] = { ...prevTracks[trackIndex] };
-            newTracks[trackIndex].beats = [...prevTracks[trackIndex].beats];
-            newTracks[trackIndex].beats[beatIndex] = { ...prevTracks[trackIndex].beats[beatIndex] };
-            newTracks[trackIndex].beats[beatIndex].notes = [...prevTracks[trackIndex].beats[beatIndex].notes];
-            newTracks[trackIndex].beats[beatIndex].notes[subdivisionIndex] =
-                prevTracks[trackIndex].beats[beatIndex].notes[subdivisionIndex] === 1 ? 0 : 1;
-            return newTracks;
-        });
-    };
-
-    const changeBeatType = (trackIndex, beatIndex, newType) => {
-        setTracks(prevTracks => {
-            const newTracks = [...prevTracks];
-            newTracks[trackIndex] = { ...prevTracks[trackIndex] };
-            newTracks[trackIndex].beats = [...prevTracks[trackIndex].beats];
-
-            const subdivisions = newType === 'straight' ? 4 : 3;
-            newTracks[trackIndex].beats[beatIndex] = {
-                type: newType,
-                notes: new Array(subdivisions).fill(0)
-            };
-
-            return newTracks;
-        });
-    };
-
-    const handlePlay = () => {
-        if (!isPlaying) {
-            setIsPlaying(true);
-        } else {
-            setIsPlaying(false);
-        }
-    };
-
-    const handleStop = () => {
-        setIsPlaying(false);
-        Tone.getTransport().stop();
-    };
-
-    const handleBpmChange = (newBpm) => {
-        if (newBpm >= 60 && newBpm <= 250) {
-            setTempo(newBpm);
-        }
-    };
+    const { samplesRef, samplesLoaded} = useAudioSamples();
+    const { isPlaying, tempo, play, stop, setBpm, measures, setBars } = useTransport(120, 1)
+    const { tracks, toggleNote, changeBeatType, clearTracks } = useTracks(samplesRef, samplesLoaded, measures);
+    const { currentStep } = useSequencer(tracks, tempo, samplesRef, isPlaying, measures);
 
     if (!samplesLoaded) {
         return (
@@ -112,8 +40,8 @@ function App() {
                     <div className="transport-wrapper">
                         <Transport
                             isPlaying={isPlaying}
-                            onPlay={handlePlay}
-                            onStop={handleStop}
+                            onPlay={play}
+                            onStop={stop}
                             samplesLoaded={samplesLoaded}
                         />
                     </div>
@@ -122,35 +50,49 @@ function App() {
 
                     <BPMControl
                         bpm={tempo}
-                        onBpmChange={handleBpmChange}
+                        onBpmChange={setBpm}
+                    />
+
+                    <div className="divider"></div>
+
+                    <MeasureControl
+                        measures={measures}
+                        onMeasuresChange={setBars}
                     />
                 </section>
 
                 <section className="sequencer-section">
-                    <div className="sequencer-header">
-                        <h2 className="sequencer-title">Sequencer</h2>
-                        <p className="sequencer-subtitle">Click cells to toggle notes • Change beat types for mixed rhythms</p>
-                    </div>
-
-                    {tracks.map((track, trackIndex) => (
-                        <div key={track.id} className="track-row">
-                            <div className="track-label">{track.instrument}</div>
-                            <div className="beats-container">
-                                {track.beats.map((beat, beatIndex) => (
-                                    <Beat
-                                        key={beatIndex}
-                                        tracks={tracks}
-                                        trackIndex={trackIndex}
-                                        beatIndex={beatIndex}
-                                        onToggle={toggleNote}
-                                        onTypeChange={changeBeatType}
-                                        currentStep={currentStep}
-                                        isPlaying={isPlaying}
-                                    />
-                                ))}
+                    <div className="sequencer-inner">
+                        <div className="sequencer-header">
+                            <div className="sequencer-inner-header">
+                                <h2 className="sequencer-title">Sequencer</h2>
+                                <p className="sequencer-subtitle">Click cells to toggle notes</p>
                             </div>
+                            <Clear onClear={clearTracks} />
                         </div>
-                    ))}
+
+                        {tracks.map((track, trackIndex) => (
+                            <div key={track.id} className="track-row">
+                                <div className="track-label-wrapper">
+                                    <div className="track-label">{track.instrument}</div>
+                                </div>
+                                <div className="beats-container">
+                                    {track.beats.map((beat, beatIndex) => (
+                                        <Beat
+                                            key={beatIndex}
+                                            tracks={tracks}
+                                            trackIndex={trackIndex}
+                                            beatIndex={beatIndex}
+                                            onToggle={toggleNote}
+                                            onTypeChange={changeBeatType}
+                                            currentStep={currentStep}
+                                            isPlaying={isPlaying}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </section>
                 <Footer />
             </main>
