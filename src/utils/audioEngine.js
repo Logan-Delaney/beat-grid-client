@@ -39,6 +39,80 @@ const getSynths = async () => {
                     release: .75,
                 }
             }).connect(masterLimiter),
+            'pluck': new Tone.PluckSynth({
+                attackNoise: 1,
+                dampening: 4000,
+                resonance: 0.7
+            }).connect(masterLimiter),
+            'am synth': new Tone.AMSynth({
+                volume: 12,
+                harmonicity: 2,
+                oscillator: {
+                    type: "sine"
+                },
+                envelope: {
+                    attack: 0.01,
+                    decay: 0.3,
+                    sustain: 0.1,
+                    release: 0.8
+                },
+                modulation: {
+                    type: "square"
+                },
+                modulationEnvelope: {
+                    attack: 0.01,
+                    decay: 0.3,
+                    sustain: 0,
+                    release: 0.5
+                }
+            }).connect(masterLimiter),
+            'fm synth': new Tone.FMSynth({
+                harmonicity: 3,
+                modulationIndex: 10,
+                oscillator: {
+                    type: "sine"
+                },
+                envelope: {
+                    attack: 0.01,
+                    decay: 0.2,
+                    sustain: 0,
+                    release: 0.5
+                },
+                modulation: {
+                    type: "square"
+                },
+                modulationEnvelope: {
+                    attack: 0.01,
+                    decay: 0.2,
+                    sustain: 0,
+                    release: 0.3
+                }
+            }).connect(masterLimiter),
+            'mono synth': new Tone.MonoSynth({
+                volume: -12,
+                oscillator: {
+                    type: "sawtooth"
+                },
+                filter: {
+                    Q: 6,
+                    type: "lowpass",
+                    rolloff: -24
+                },
+                envelope: {
+                    attack: 0.005,
+                    decay: 0.3,
+                    sustain: 0.0,
+                    release: 0.8
+                },
+                filterEnvelope: {
+                    attack: 0.001,
+                    decay: 0.3,
+                    sustain: 0.0,
+                    release: 0.8,
+                    baseFrequency: 200,
+                    octaves: 4
+                }
+            }).connect(masterLimiter),
         }
 
         await Tone.loaded();
