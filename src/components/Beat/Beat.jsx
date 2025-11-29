@@ -54,16 +54,19 @@ function Beat({ tracks, trackIndex, beatIndex, onToggle, onTypeChange, currentSt
             {track.isPitched ? (
                 <div className="rhythm-grid-container">
                     <div className="rhythm-grid">
-                        {beat.notes.map((note, index) => (
-                            <div
-                                key={index}
-                                className="rhythm-cell"
-                            />
-                        ))}
+                        {beat.notes.map((note, index) => {
+
+                            return (
+                                <div
+                                    key={index}
+                                    className={`rhythm-cell ${note.active === 1 ? 'rhythm-cell--active' : ''} ${localStep === index && isPlaying && note.active === 1 ? 'rhythm-cell--playing' : ''}`}
+                                />
+                            );
+                        })}
                     </div>
                     <div className="rhythm-grid-overlay">
                         <button onClick={() => onOpenPianoRoll(trackIndex, beatIndex)}>
-                            Piano Roll
+                            Edit
                         </button>
                     </div>
                 </div>

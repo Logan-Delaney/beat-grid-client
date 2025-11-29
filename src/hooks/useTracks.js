@@ -24,5 +24,36 @@ export const useTracks = (samplesRef, synthsRef, samplesLoaded, synthsLoaded, me
         setTracks(generateTracksFromSamples(samplesRef.current, synthsRef.current, measures));
     }, [samplesRef, synthsRef, measures]);
 
-    return { tracks, setTracks, toggleNote, changeBeatType, clearTracks };
+    const updateNotePitch = useCallback((trackIndex, beatIndex, subdivIndex, pitch) => {
+        setTracks(prevTracks => {
+            const newTracks = prevTracks.map((track, tIdx) => {
+                if (tIdx !== trackIndex) return track;
+
+                return {
+                    ...track,
+                    beats: track.beats.map((beat, bIdx) => {
+                        if (bIdx !== beatIndex) return beat;
+
+                        return {
+                            ...beat,
+                            notes: beat.notes.map((note, nIdx) => {
+                                if (nIdx !== subdivIndex) return note;
+
+                                // Toggle: if same pitch and active, deactivate
+                                if (note.active === 1 && note.pitch === pitch) {
+                                    return { active: 0, pitch: null };
+                                }
+                                // Otherwise activate with new pitch
+                                return { active: 1, pitch: pitch };
+                            })
+                        };
+                    })
+                };
+            });
+
+            return newTracks;
+        });
+    }, []);
+
+    return { tracks, setTracks, toggleNote, changeBeatType, clearTracks, updateNotePitch };
 };

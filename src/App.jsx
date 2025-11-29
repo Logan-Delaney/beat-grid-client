@@ -15,7 +15,7 @@ import PianoRollModal from "./components/PianoRollModal/PianoRollModal.jsx";
 function App() {
     const { samplesRef, synthsRef, samplesLoaded, synthsLoaded} = useAudioSamples();
     const { isPlaying, tempo, play, stop, setBpm, measures, setBars } = useTransport(120, 1)
-    const { tracks, toggleNote, changeBeatType, clearTracks } = useTracks(samplesRef, synthsRef, samplesLoaded, synthsLoaded, measures);
+    const { tracks, toggleNote, changeBeatType, clearTracks, updateNotePitch } = useTracks(samplesRef, synthsRef, samplesLoaded, synthsLoaded, measures);
     const { currentStep } = useSequencer(tracks, tempo, samplesRef, synthsRef, isPlaying, measures);
 
     const [pianoRollOpen, setPianoRollOpen] = React.useState(false);
@@ -119,6 +119,7 @@ function App() {
                         trackIndex={pianoRollTrackIndex}
                         beatIndex={pianoRollBeatIndex}
                         tracks={tracks}
+                        onUpdateNote={updateNotePitch}
                     />
                 )}
             </main>

@@ -1,9 +1,9 @@
 import {useEffect, useState} from 'react'
 import './PianoRollModal.css';
-import { getNotesInOctave, getPitchFromNoteAndOctave, getBeatsInMeasure, calculateTotalColumns } from "../../utils/pianoRollHelpers.js";
+import { getNotesInOctave, getBeatsInMeasure } from "../../utils/pianoRollHelpers.js";
 import NOTES from "../../constants/notes.js";
 
-function PianoRollModal({ isOpen, onClose, trackIndex, beatIndex, tracks }) {
+function PianoRollModal({ isOpen, onClose, trackIndex, beatIndex, tracks, onUpdateNote }) {
     const measureIndex = Math.floor(beatIndex / 4);
     const [measure, setMeasure] = useState(measureIndex);
     const [octave, setOctave] = useState(2);
@@ -33,9 +33,15 @@ function PianoRollModal({ isOpen, onClose, trackIndex, beatIndex, tracks }) {
     const track = tracks[trackIndex];
     const totalMeasures = Math.ceil(track.beats.length / 4);
     const currentMeasureBeats = getBeatsInMeasure(track.beats, measure);
-    const totalColumns = calculateTotalColumns(currentMeasureBeats);
     const noteNames = NOTES;
     const notePitches = getNotesInOctave(octave);
+
+    const handleCellClick = (beatIdxInMeasure, subdivIndex, pitch) => {
+        console.log('Cell clicked!', { beatIdxInMeasure, subdivIndex, pitch });
+        const actualBeatIndex = (measure * 4) + beatIdxInMeasure;
+        console.log('Calling onUpdateNote with:', { trackIndex, actualBeatIndex, subdivIndex, pitch });
+        onUpdateNote(trackIndex, actualBeatIndex, subdivIndex, pitch);
+    }
 
     return (
         <div className="modal-backdrop" onClick={handleBackdropClick}>
@@ -84,6 +90,11 @@ function PianoRollModal({ isOpen, onClose, trackIndex, beatIndex, tracks }) {
                                                     <div
                                                         key={subdivIdx}
                                                         className={`grid-cell ${isActive ? 'grid-cell--active' : ''}`}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            e.preventDefault();
+                                                            handleCellClick(beatIdx, subdivIdx, notePitch);
+                                                        }}
                                                     />
                                                 );
                                             })}
