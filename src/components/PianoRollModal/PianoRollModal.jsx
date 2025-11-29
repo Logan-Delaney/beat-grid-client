@@ -1,5 +1,7 @@
 import {useEffect, useState} from 'react'
 import './PianoRollModal.css';
+import { getNotesInOctave, getPitchFromNoteAndOctave, getBeatsInMeasure, calculateTotalColumns } from "../../utils/pianoRollHelpers.js";
+import NOTES from "../../constants/notes.js";
 
 function PianoRollModal({ isOpen, onClose, trackIndex, beatIndex, tracks }) {
     const measureIndex = Math.floor(beatIndex / 4);
@@ -29,8 +31,11 @@ function PianoRollModal({ isOpen, onClose, trackIndex, beatIndex, tracks }) {
     if (!isOpen) return null;
 
     const track = tracks[trackIndex];
-
     const totalMeasures = Math.ceil(track.beats.length / 4);
+    const currentMeasureBeats = getBeatsInMeasure(track.beats, measure);
+    const totalColumns = calculateTotalColumns(currentMeasureBeats);
+    const noteNames = NOTES;
+    const notePitches = getNotesInOctave(octave);
 
     return (
         <div className="modal-backdrop" onClick={handleBackdropClick}>
@@ -55,8 +60,39 @@ function PianoRollModal({ isOpen, onClose, trackIndex, beatIndex, tracks }) {
                     <span className="octave-display">Octave {octave}</span>
                     <button className="octave-button">↑</button>
                 </div>
-                <div className="grid-placeholder">
-                    Grid goes here
+                <div className="piano-roll-grid">
+                    <div className="note-labels">
+                        {noteNames.map((noteName, index) => (
+                            <div key={index} className="note-label">
+                                {noteName}
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="grid-area">
+                        {noteNames.map((noteName, rowIndex) => (
+                            <div key={rowIndex} className="grid-row">
+                                {currentMeasureBeats.map((beat, beatIdx) => {
+                                    const notePitch = notePitches[rowIndex];
+
+                                    return (
+                                        <div key={beatIdx} className="beat-column">
+                                            {beat.notes.map((note, subdivIdx) => {
+                                                const isActive = note.active === 1 && note.pitch === notePitch;
+
+                                                return (
+                                                    <div
+                                                        key={subdivIdx}
+                                                        className={`grid-cell ${isActive ? 'grid-cell--active' : ''}`}
+                                                    />
+                                                );
+                                            })}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
             </div>
