@@ -48,7 +48,7 @@ function Beat({ tracks, trackIndex, beatIndex, onToggle, onTypeChange, currentSt
                     }}
                     aria-label={`Switch to ${beat.type === 'straight' ? 'triplet' : 'straight'}`}
                 >
-                    {beat.type === 'straight' ? '3' : '4'}
+                    {beat.type === 'straight' ? '4' : '3'}
                 </button>
             </div>
 
@@ -56,7 +56,7 @@ function Beat({ tracks, trackIndex, beatIndex, onToggle, onTypeChange, currentSt
                 {beat.notes.map((note, index) => (
                     <button
                         key={index}
-                        className={`beat-cell ${note === 1 ? 'beat-cell--active' : ''} ${localStep === index && isPlaying ? 'beat-cell--playing' : ''}`}
+                        className={`beat-cell ${note.active === 1 ? 'beat-cell--active' : ''} ${localStep === index && isPlaying ? 'beat-cell--playing' : ''}`}
                         onClick={() => handleCellClick(index)}
                         aria-label={`Beat ${beatIndex + 1}, subdivision ${index + 1}`}
                     />

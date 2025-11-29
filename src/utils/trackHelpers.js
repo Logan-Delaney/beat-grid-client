@@ -1,7 +1,10 @@
 export const createEmptyBeats = (count = 4) => {
     return Array(count).fill(null).map(() => ({
         type: 'straight',
-        notes: [0, 0, 0, 0]
+        notes: Array.from({ length: 4 }, () => ({
+            active: 0,
+            pitch: null
+        })),
     }));
 };
 
@@ -14,6 +17,7 @@ export const generateTracksFromSamples = (samples, synths, measures) => {
     return instrumentNames.map((instrumentName, index) => ({
         id: `${instrumentName}-track-${index}`,
         instrument: instrumentName,
-        beats: createEmptyBeats(beats)
+        isPitched: !!synths[instrumentName],
+        beats: createEmptyBeats(beats),
     }));
 };

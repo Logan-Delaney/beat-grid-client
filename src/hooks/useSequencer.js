@@ -18,7 +18,7 @@ const useSequencer = (track, bpm, samplesRef, synthsRef, isPlaying, measures) =>
                 const duration = beatType.duration;
 
                 for (let j = 0; j < beat.notes.length; j++) {
-                    if (beat.notes[j] === 1) {
+                    if (beat.notes[j].active === 1) {
                         let event = {
                             time: {
                                 '4n': i,
@@ -28,7 +28,8 @@ const useSequencer = (track, bpm, samplesRef, synthsRef, isPlaying, measures) =>
                             stepNumber: stepCounter,
                             trackIndex: tracks,
                             beatIndex: i,
-                            subdivIndex: j
+                            subdivIndex: j,
+                            pitch: beat.notes[j].pitch,
                         }
                         events.push(event);
                     }
