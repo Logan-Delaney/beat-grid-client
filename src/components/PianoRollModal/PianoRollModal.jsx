@@ -37,10 +37,32 @@ function PianoRollModal({ isOpen, onClose, trackIndex, beatIndex, tracks, onUpda
     const notePitches = getNotesInOctave(octave);
 
     const handleCellClick = (beatIdxInMeasure, subdivIndex, pitch) => {
-        console.log('Cell clicked!', { beatIdxInMeasure, subdivIndex, pitch });
         const actualBeatIndex = (measure * 4) + beatIdxInMeasure;
-        console.log('Calling onUpdateNote with:', { trackIndex, actualBeatIndex, subdivIndex, pitch });
         onUpdateNote(trackIndex, actualBeatIndex, subdivIndex, pitch);
+    }
+
+    const handlePreviousMeasure = () => {
+        if (measure > 0){
+            setMeasure(measure - 1);
+        }
+    }
+
+    const handleNextMeasure = () => {
+        if (measure < totalMeasures - 1) {
+            setMeasure(measure + 1);
+        }
+    }
+
+    const handleOctaveDown = () => {
+        if (octave > 1){
+            setOctave(octave - 1);
+        }
+    }
+
+    const handleOctaveUp = () => {
+        if (octave < 5){
+            setOctave(octave + 1);
+        }
     }
 
     return (
@@ -55,16 +77,36 @@ function PianoRollModal({ isOpen, onClose, trackIndex, beatIndex, tracks, onUpda
                     </button>
                 </div>
                 <div className="measure-navigation">
-                    <button className="nav-button">← Prev</button>
+                    <button
+                        className="nav-button"
+                        onClick={handlePreviousMeasure}
+                        disabled={measure === 0}
+                        >← Prev
+                    </button>
                     <span className="measure-display">
-                        Measure {measure + 1} of {totalMeasures}
+                        Measure {measure + 1} / {totalMeasures}
                     </span>
-                    <button className="nav-button">Next →</button>
+                    <button
+                        className="nav-button"
+                        onClick={handleNextMeasure}
+                        disabled={measure === totalMeasures - 1}
+                        >Next →
+                    </button>
                 </div>
                 <div className="octave-controls">
-                    <button className="octave-button">↓</button>
+                    <button
+                        className="octave-button"
+                        onClick={handleOctaveDown}
+                        disabled={octave === 1}
+                        >↓
+                    </button>
                     <span className="octave-display">Octave {octave}</span>
-                    <button className="octave-button">↑</button>
+                    <button
+                        className="octave-button"
+                        onClick={handleOctaveUp}
+                        disabled={octave === 5}
+                        >↑
+                    </button>
                 </div>
                 <div className="piano-roll-grid">
                     <div className="note-labels">

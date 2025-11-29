@@ -206,6 +206,7 @@
     justify-content: space-evenly;
     padding: 0 8px;
     position: relative;
+    min-width: 25%;
 }
 
 .beat-column::after {
@@ -253,18 +254,47 @@
 
 /* Mobile responsive */
 @media (max-width: 768px) {
+    .modal-container {
+        max-height: 90%;
+        padding: 12px;
+    }
+
+    .piano-roll-grid {
+        min-height: 100%;
+    };
+
     .note-label {
-        height: 20px;
-        width: 30px;
         font-size: 10px;
     }
 
-    .grid-row {
-        height: 20px;
+    .measure-display {
+        font-weight: 700;
+        font-size: 8px;
     }
 
-    .grid-cell {
-        width: 20px;
-        height: 20px;
+    .octave-display {
+        font-size: 8px;
+    }
+
+    .octave-controls {
+        max-height: 40%;
+        margin-bottom: 8px;
+    }
+
+    .octave-button {
+        font-size: 8px;
+        min-width: 15%;
+        padding: 4px 8px;
+    }
+
+    .measure-navigation {
+        max-height: 40%;
+        margin-bottom: 8px;
+    }
+
+    .nav-button {
+        font-size: 8px;
+        min-width: 15%;
+        padding: 4px 8px;
     }
 }

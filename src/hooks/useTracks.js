@@ -39,11 +39,9 @@ export const useTracks = (samplesRef, synthsRef, samplesLoaded, synthsLoaded, me
                             notes: beat.notes.map((note, nIdx) => {
                                 if (nIdx !== subdivIndex) return note;
 
-                                // Toggle: if same pitch and active, deactivate
                                 if (note.active === 1 && note.pitch === pitch) {
                                     return { active: 0, pitch: null };
                                 }
-                                // Otherwise activate with new pitch
                                 return { active: 1, pitch: pitch };
                             })
                         };
