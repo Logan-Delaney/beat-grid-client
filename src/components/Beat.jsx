@@ -1,7 +1,7 @@
 import React from "react";
 import './Beat.css';
 
-function Beat({ tracks, trackIndex, beatIndex, onToggle, onTypeChange, currentStep, isPlaying }) {
+function Beat({ tracks, trackIndex, beatIndex, onToggle, onTypeChange, currentStep, isPlaying, onOpenPianoRoll }) {
     const track = tracks[trackIndex];
     const beat = track.beats[beatIndex];
 
@@ -51,16 +51,35 @@ function Beat({ tracks, trackIndex, beatIndex, onToggle, onTypeChange, currentSt
                 </button>
             </div>
 
-            <div className="beat-grid">
-                {beat.notes.map((note, index) => (
-                    <button
-                        key={index}
-                        className={`beat-cell ${note.active === 1 ? 'beat-cell--active' : ''} ${localStep === index && isPlaying ? 'beat-cell--playing' : ''}`}
-                        onClick={() => handleCellClick(index)}
-                        aria-label={`Beat ${beatIndex + 1}, subdivision ${index + 1}`}
-                    />
-                ))}
-            </div>
+            {track.isPitched ? (
+                <div className="rhythm-grid-container">
+                    <div className="rhythm-grid">
+                        {beat.notes.map((note, index) => (
+                            <div
+                                key={index}
+                                className="rhythm-cell"
+                            />
+                        ))}
+                    </div>
+                    <div className="rhythm-grid-overlay">
+                        <button onClick={() => onOpenPianoRoll(trackIndex, beatIndex)}>
+                            Piano Roll
+                        </button>
+                    </div>
+                </div>
+            ) : (
+
+                <div className="beat-grid">
+                    {beat.notes.map((note, index) => (
+                        <button
+                            key={index}
+                            className={`beat-cell ${note.active === 1 ? 'beat-cell--active' : ''} ${localStep === index && isPlaying ? 'beat-cell--playing' : ''}`}
+                            onClick={() => handleCellClick(index)}
+                            aria-label={`Beat ${beatIndex + 1}, subdivision ${index + 1}`}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

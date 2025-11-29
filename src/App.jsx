@@ -10,12 +10,29 @@ import { useTracks } from "./hooks/useTracks.js";
 import {useTransport} from "./hooks/useTransport.js";
 import MeasureControl from "./components/MeasureControl.jsx";
 import Clear from "./components/Clear.jsx";
+import PianoRollModal from "./components/PianoRollModal.jsx";
 
 function App() {
     const { samplesRef, synthsRef, samplesLoaded, synthsLoaded} = useAudioSamples();
     const { isPlaying, tempo, play, stop, setBpm, measures, setBars } = useTransport(120, 1)
     const { tracks, toggleNote, changeBeatType, clearTracks } = useTracks(samplesRef, synthsRef, samplesLoaded, synthsLoaded, measures);
     const { currentStep } = useSequencer(tracks, tempo, samplesRef, synthsRef, isPlaying, measures);
+
+    const [pianoRollOpen, setPianoRollOpen] = React.useState(false);
+    const [pianoRollTrackIndex, setPianoRollTrackIndex] = React.useState(0);
+    const [pianoRollBeatIndex, setPianoRollBeatIndex] = React.useState(0);
+
+    const openPianoRollModal = (trackIndex, beatIndex) => {
+        setPianoRollOpen(true);
+        setPianoRollTrackIndex(trackIndex);
+        setPianoRollBeatIndex(beatIndex);
+    }
+
+    const closePianoRollModal = () => {
+        setPianoRollOpen(false);
+        setPianoRollTrackIndex(0);
+        setPianoRollBeatIndex(0);
+    }
 
     if (!samplesLoaded) {
         return (
@@ -86,6 +103,7 @@ function App() {
                                             onTypeChange={changeBeatType}
                                             currentStep={currentStep}
                                             isPlaying={isPlaying}
+                                            onOpenPianoRoll={openPianoRollModal}
                                         />
                                     ))}
                                 </div>
@@ -94,6 +112,15 @@ function App() {
                     </div>
                 </section>
                 <Footer />
+                {pianoRollOpen && (
+                    <PianoRollModal
+                        isOpen={pianoRollOpen}
+                        onClose={closePianoRollModal}
+                        trackIndex={pianoRollTrackIndex}
+                        beatIndex={pianoRollBeatIndex}
+                        tracks={tracks}
+                    />
+                )}
             </main>
         </div>
     );

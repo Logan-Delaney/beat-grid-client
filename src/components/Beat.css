@@ -152,6 +152,68 @@
     box-shadow: none;
 }
 
+.rhythm-grid-container {
+    position: relative;
+    width: 100%;
+}
+
+.rhythm-grid {
+    display: flex;
+    gap: 10px;
+    justify-content: space-evenly;
+    flex: 1;
+    min-width: 230px;
+}
+
+.rhythm-cell {
+    width: 25px;
+    height: 25px;
+    border: 2px solid #333;
+    border-radius: 6px;
+    background-color: #0a0a0a;
+    opacity: 0.4;
+}
+
+.rhythm-grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+}
+
+.rhythm-grid-overlay:hover {
+    opacity: 1;
+    background-color: rgba(74, 158, 255, 0.1);
+    pointer-events: auto;
+}
+
+.rhythm-grid-overlay button {
+    padding: 8px 16px;
+    background-color: #4a9eff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(74, 158, 255, 0.3);
+    pointer-events: auto;
+}
+
+.rhythm-grid-overlay button:hover {
+    background-color: #6ab0ff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 24px rgba(74, 158, 255, 0.4);
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .beat-container {
@@ -173,5 +235,16 @@
     .beat-grid {
         min-width: 150px;
         gap: 8px;
+    }
+
+    .rhythm-grid-overlay {
+        opacity: 1;
+        background-color: rgba(74, 158, 255, 0.05);
+        pointer-events: auto;
+    }
+
+    .rhythm-cell {
+        width: 25px;
+        height: 25px;
     }
 }
