@@ -1,5 +1,5 @@
 import React from "react";
-import './BPMControl.css';
+import '../BPMControl/BPMControl.css';
 
 function MeasureControl({ measures, onMeasuresChange }) {
     const [value, setValue] = React.useState(measures);
@@ -17,8 +17,8 @@ function MeasureControl({ measures, onMeasuresChange }) {
         if (num < 1){
             setValue(1);
         }
-        if (num > 4){
-            setValue(4);
+        if (num > 16){
+            setValue(16);
         }
         onMeasuresChange(value);
     }
@@ -30,7 +30,7 @@ function MeasureControl({ measures, onMeasuresChange }) {
             <input
                 type="number"
                 min={1}
-                max={4}
+                max={16}
                 value={value}
                 onChange={handleInputChange}
                 onBlur={handleBlur}
