@@ -1,5 +1,5 @@
 import React from "react";
-import './BPMControl.css';
+import '../BPMControl/BPMControl.css';
 
 function MeasureControl({ measures, onMeasuresChange }) {
     const [value, setValue] = React.useState(measures);

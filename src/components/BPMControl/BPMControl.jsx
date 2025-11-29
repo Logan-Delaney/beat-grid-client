@@ -1,5 +1,5 @@
 import React from "react";
-import './BPMControl.css';
+import './BPMControl.css'
 
 function BPMControl({ bpm, onBpmChange }) {
     const [value, setValue] = React.useState(bpm);

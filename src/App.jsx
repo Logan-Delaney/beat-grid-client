@@ -1,16 +1,16 @@
 import React from 'react';
 import './App.css';
-import Transport from './components/Transport';
-import BPMControl from './components/BPMControl';
-import Beat from './components/Beat';
+import Transport from './components/Transport/Transport.jsx';
+import BPMControl from './components/BPMControl/BPMControl.jsx';
+import Beat from './components/Beat/Beat.jsx';
 import useSequencer from './hooks/useSequencer';
-import Footer from "./components/Footer.jsx";
+import Footer from "./components/Footer/Footer.jsx";
 import { useAudioSamples } from "./hooks/useAudioSamples.js";
 import { useTracks } from "./hooks/useTracks.js";
 import {useTransport} from "./hooks/useTransport.js";
-import MeasureControl from "./components/MeasureControl.jsx";
-import Clear from "./components/Clear.jsx";
-import PianoRollModal from "./components/PianoRollModal.jsx";
+import MeasureControl from "./components/MeasureControl/MeasureControl.jsx";
+import Clear from "./components/Clear/Clear.jsx";
+import PianoRollModal from "./components/PianoRollModal/PianoRollModal.jsx";
 
 function App() {
     const { samplesRef, synthsRef, samplesLoaded, synthsLoaded} = useAudioSamples();
