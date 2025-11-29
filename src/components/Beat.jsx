@@ -1,5 +1,4 @@
 import React from "react";
-import BEAT_TYPES from "../constants/beatTypes.js";
 import './Beat.css';
 
 function Beat({ tracks, trackIndex, beatIndex, onToggle, onTypeChange, currentStep, isPlaying }) {
