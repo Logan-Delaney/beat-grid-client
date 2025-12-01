@@ -2,7 +2,7 @@ import {useState, useRef, useEffect} from 'react';
 import * as Tone from 'tone';
 import BEAT_TYPES from '../constants/beatTypes';
 
-const useSequencer = (track, bpm, samplesRef, synthsRef, isPlaying, measures) => {
+const useSequencer = (track, bpm, samplesRef, synthsRef, isPlaying, measures, loop) => {
     const [currentStep, setCurrentStep] = useState(0);
     const partRef = useRef(null);
 
@@ -65,19 +65,27 @@ const useSequencer = (track, bpm, samplesRef, synthsRef, isPlaying, measures) =>
             }
         }, events);
 
-        part.loop = true;
+        part.loop = loop;
         part.loopEnd = `${measures}:0:0`
         part.loopStart = 0;
         part.start(0);
         partRef.current = part;
+
+        if (!loop) {
+            transport.schedule(() => {
+                transport.stop();
+                setCurrentStep(0);
+            }, `${measures}:0:0`);
+        }
 
         return () => {
             if (partRef.current) {
                 partRef.current.dispose();
                 partRef.current = null;
             }
+            transport.cancel();
         };
-    }, [track, bpm, samplesRef, synthsRef, isPlaying, measures]);
+    }, [track, bpm, samplesRef, synthsRef, isPlaying, measures, loop]);
 
     useEffect(() => {
         if (!samplesRef.current || !synthsRef.current) return;

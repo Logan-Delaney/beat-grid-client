@@ -21,3 +21,27 @@ export const generateTracksFromSamples = (samples, synths, measures) => {
         beats: createEmptyBeats(beats),
     }));
 };
+
+export const generateInitialTrack = (samples, synths, measures) => {
+    const beats = measures * 4;
+
+    return [{
+            id: 'kick',
+            instrument: 'kick',
+            isPitched: false,
+            beats: createEmptyBeats(beats),
+        },
+        {
+            id: 'snare',
+            instrument: 'snare',
+            isPitched: false,
+            beats: createEmptyBeats(beats),
+        },
+        {
+            id: 'hihat',
+            instrument: 'hihat',
+            isPitched: false,
+            beats: createEmptyBeats(beats),
+        }
+    ];
+};

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import * as Tone from 'tone';
+import './Transport.css';
 
-function Transport({ isPlaying, onPlay, onStop, samplesLoaded }){
+function Transport({ isPlaying, onPlay, onStop, samplesLoaded, loop, onToggleLoop }) {
     const [audioInitialized, setAudioInitialized] = useState(false);
 
     const handlePlay = async () => {
@@ -30,6 +31,15 @@ function Transport({ isPlaying, onPlay, onStop, samplesLoaded }){
                 disabled={!samplesLoaded || !isPlaying}
             >
                 Stop
+            </button>
+
+            <button
+                className={`transport-button transport-button--loop ${loop ? 'transport-button--loop-active' : ''}`}
+                onClick={onToggleLoop}
+                disabled={!samplesLoaded || isPlaying}
+                title={loop ? 'Loop: On' : 'Loop: Off'}
+            >
+                LOOP
             </button>
         </div>
     );

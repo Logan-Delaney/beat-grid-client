@@ -11,16 +11,18 @@ import {useTransport} from "./hooks/useTransport.js";
 import MeasureControl from "./components/MeasureControl/MeasureControl.jsx";
 import Clear from "./components/Clear/Clear.jsx";
 import PianoRollModal from "./components/PianoRollModal/PianoRollModal.jsx";
+import AddTrackModal from "./components/AddTrackModal/AddTrackModal.jsx";
 
 function App() {
     const { samplesRef, synthsRef, samplesLoaded, synthsLoaded} = useAudioSamples();
-    const { isPlaying, tempo, play, stop, setBpm, measures, setBars } = useTransport(120, 1)
-    const { tracks, toggleNote, changeBeatType, clearTracks, updateNotePitch } = useTracks(samplesRef, synthsRef, samplesLoaded, synthsLoaded, measures);
-    const { currentStep } = useSequencer(tracks, tempo, samplesRef, synthsRef, isPlaying, measures);
+    const { isPlaying, tempo, play, stop, setBpm, measures, setBars, loop, toggleLoop } = useTransport(120, 1)
+    const { tracks, toggleNote, changeBeatType, clearTracks, updateNotePitch, addTrack, removeTrack } = useTracks(samplesRef, synthsRef, samplesLoaded, synthsLoaded, measures);
+    const { currentStep } = useSequencer(tracks, tempo, samplesRef, synthsRef, isPlaying, measures, loop);
 
     const [pianoRollOpen, setPianoRollOpen] = React.useState(false);
     const [pianoRollTrackIndex, setPianoRollTrackIndex] = React.useState(0);
     const [pianoRollBeatIndex, setPianoRollBeatIndex] = React.useState(0);
+    const [addTrackModalOpen, setAddTrackModalOpen] = React.useState(false);
 
     const openPianoRollModal = (trackIndex, beatIndex) => {
         setPianoRollOpen(true);
@@ -32,6 +34,14 @@ function App() {
         setPianoRollOpen(false);
         setPianoRollTrackIndex(0);
         setPianoRollBeatIndex(0);
+    }
+
+    const openAddTrackModal = () => {
+        setAddTrackModalOpen(true);
+    }
+
+    const closeAddTrackModal = () => {
+        setAddTrackModalOpen(false);
     }
 
     if (!samplesLoaded) {
@@ -59,6 +69,8 @@ function App() {
                             onPlay={play}
                             onStop={stop}
                             samplesLoaded={samplesLoaded}
+                            loop={loop}
+                            onToggleLoop={toggleLoop}
                         />
                     </div>
 
@@ -91,6 +103,15 @@ function App() {
                             <div key={track.id} className="track-row">
                                 <div className="track-label-wrapper">
                                     <div className="track-label">{track.instrument}</div>
+                                    {tracks.length > 1 && (
+                                        <button
+                                            className="remove-track-button"
+                                            onClick={() => removeTrack(trackIndex)}
+                                            aria-label="Remove track"
+                                        >
+                                            ×
+                                        </button>
+                                    )}
                                 </div>
                                 <div className="beats-container">
                                     {track.beats.map((beat, beatIndex) => (
@@ -110,7 +131,15 @@ function App() {
                             </div>
                         ))}
                     </div>
+
                 </section>
+                {tracks.length < 12 && (
+                    <div className="add-track-row">
+                        <button className="add-track-button" onClick={openAddTrackModal}>
+                            ➕ Add Track
+                        </button>
+                    </div>
+                )}
                 <Footer />
                 {pianoRollOpen && (
                     <PianoRollModal
@@ -120,6 +149,16 @@ function App() {
                         beatIndex={pianoRollBeatIndex}
                         tracks={tracks}
                         onUpdateNote={updateNotePitch}
+                    />
+                )}
+                {addTrackModalOpen && (
+                    <AddTrackModal
+                        isOpen={addTrackModalOpen}
+                        onClose={closeAddTrackModal}
+                        onAddTrack={addTrack}
+                        existingInstruments={tracks.map(t => t.instrument)}
+                        samples={samplesRef}
+                        synths={synthsRef}
                     />
                 )}
             </main>

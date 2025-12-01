@@ -11,7 +11,7 @@ const getSamples = async () => {
             crash: new Tone.Player('/sounds/instruments/808-drums/crash.wav').connect(masterLimiter),
             hihat: new Tone.Player('/sounds/instruments/808-drums/hihat.wav').connect(masterLimiter),
             openhat: new Tone.Player('/sounds/instruments/808-drums/openhat.wav').connect(masterLimiter),
-            perc: new Tone.Player('/sounds/instruments/808-drums/perc.wav').connect(masterLimiter),
+            claves: new Tone.Player('/sounds/instruments/808-drums/perc.wav').connect(masterLimiter),
             snare: new Tone.Player('/sounds/instruments/808-drums/snare.wav').connect(masterLimiter),
             tom: new Tone.Player('/sounds/instruments/808-drums/tom.wav').connect(masterLimiter),
         }
@@ -28,7 +28,7 @@ const getSamples = async () => {
 const getSynths = async () => {
     try {
         const synths = {
-            bass : new Tone.MembraneSynth({
+            '808-bass' : new Tone.MembraneSynth({
                 pitchDecay: 0.009,
                 octaves: 10,
                 oscillator: { type: 'sine' },

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { generateTracksFromSamples } from "../utils/trackHelpers.js";
+import { generateTracksFromSamples, generateInitialTrack, createEmptyBeats } from "../utils/trackHelpers.js";
 import { toggleNoteInTracks, changeBeatTypeInTracks } from "../utils/stateHelpers.js";
 
 export const useTracks = (samplesRef, synthsRef, samplesLoaded, synthsLoaded, measures) => {
@@ -7,7 +7,7 @@ export const useTracks = (samplesRef, synthsRef, samplesLoaded, synthsLoaded, me
 
     useEffect(() => {
         if (samplesLoaded && samplesRef.current && synthsRef.current && synthsLoaded ) {
-            const generated = generateTracksFromSamples(samplesRef.current, synthsRef.current, measures);
+            const generated = generateInitialTrack(samplesRef.current, synthsRef.current, measures);
             setTracks(generated);
         }
     }, [samplesLoaded, samplesRef, synthsRef, synthsLoaded, measures]);
@@ -21,8 +21,13 @@ export const useTracks = (samplesRef, synthsRef, samplesLoaded, synthsLoaded, me
     }, []);
 
     const clearTracks = useCallback(() => {
-        setTracks(generateTracksFromSamples(samplesRef.current, synthsRef.current, measures));
-    }, [samplesRef, synthsRef, measures]);
+        setTracks(prev => {
+            return prev.map(track => ({
+                ...track,
+                beats: createEmptyBeats(measures * 4)
+            }));
+        });
+    }, [measures]);
 
     const updateNotePitch = useCallback((trackIndex, beatIndex, subdivIndex, pitch) => {
         setTracks(prevTracks => {
@@ -53,5 +58,26 @@ export const useTracks = (samplesRef, synthsRef, samplesLoaded, synthsLoaded, me
         });
     }, []);
 
-    return { tracks, setTracks, toggleNote, changeBeatType, clearTracks, updateNotePitch };
+    const addTrack = useCallback((instrumentName, isPitched) => {
+        setTracks(prev => {
+            const newTrack = {
+                id: `${instrumentName}-track-${Date.now()}`,
+                instrument: instrumentName,
+                isPitched: isPitched,
+                beats: createEmptyBeats(measures * 4),
+            };
+            return [...prev, newTrack];
+        });
+    }, [measures]);
+
+    const removeTrack = useCallback((trackIndex) => {
+        setTracks(prev => {
+            if (prev.length <= 1) {
+                return prev;
+            }
+            return prev.filter((_, index) => index !== trackIndex);
+        });
+    }, []);
+
+    return { tracks, setTracks, toggleNote, changeBeatType, clearTracks, updateNotePitch, addTrack, removeTrack };
 };
