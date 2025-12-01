@@ -16,7 +16,7 @@ import AddTrackModal from "./components/AddTrackModal/AddTrackModal.jsx";
 function App() {
     const { samplesRef, synthsRef, samplesLoaded, synthsLoaded} = useAudioSamples();
     const { isPlaying, tempo, play, stop, setBpm, measures, setBars, loop, toggleLoop } = useTransport(120, 1)
-    const { tracks, toggleNote, changeBeatType, clearTracks, updateNotePitch, addTrack, removeTrack } = useTracks(samplesRef, synthsRef, samplesLoaded, synthsLoaded, measures);
+    const { tracks, toggleNote, changeBeatType, clearTracks, updateNotePitch, addTrack, removeTrack, setAllBeatsToType } = useTracks(samplesRef, synthsRef, samplesLoaded, synthsLoaded, measures);
     const { currentStep } = useSequencer(tracks, tempo, samplesRef, synthsRef, isPlaying, measures, loop);
 
     const [pianoRollOpen, setPianoRollOpen] = React.useState(false);
@@ -96,7 +96,23 @@ function App() {
                                 <h2 className="sequencer-title">Sequencer</h2>
                                 <p className="sequencer-subtitle">Click cells to toggle notes</p>
                             </div>
-                            <Clear onClear={clearTracks} />
+                            <div className="header-controls">
+                                <div className="header-controls">
+                                    <button
+                                        className="rhythm-toggle-button"
+                                        onClick={() => setAllBeatsToType('straight')}
+                                    >
+                                        All 4
+                                    </button>
+                                    <button
+                                        className="rhythm-toggle-button"
+                                        onClick={() => setAllBeatsToType('triplet')}
+                                    >
+                                        All 3
+                                    </button>
+                                    <Clear onClear={clearTracks} />
+                                </div>
+                            </div>
                         </div>
 
                         {tracks.map((track, trackIndex) => (
