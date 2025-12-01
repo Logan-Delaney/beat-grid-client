@@ -12,6 +12,7 @@ import MeasureControl from "./components/MeasureControl/MeasureControl.jsx";
 import Clear from "./components/Clear/Clear.jsx";
 import PianoRollModal from "./components/PianoRollModal/PianoRollModal.jsx";
 import AddTrackModal from "./components/AddTrackModal/AddTrackModal.jsx";
+import BeatTypeButton from "./components/BeatTypeButton/BeatTypeButton.jsx";
 
 function App() {
     const { samplesRef, synthsRef, samplesLoaded, synthsLoaded} = useAudioSamples();
@@ -98,18 +99,14 @@ function App() {
                             </div>
                             <div className="header-controls">
                                 <div className="header-controls">
-                                    <button
-                                        className="rhythm-toggle-button"
-                                        onClick={() => setAllBeatsToType('straight')}
-                                    >
-                                        All 4
-                                    </button>
-                                    <button
-                                        className="rhythm-toggle-button"
-                                        onClick={() => setAllBeatsToType('triplet')}
-                                    >
-                                        All 3
-                                    </button>
+                                    <BeatTypeButton
+                                        onChangeBeat={setAllBeatsToType}
+                                        beatType={'straight'}
+                                    />
+                                    <BeatTypeButton
+                                        onChangeBeat={setAllBeatsToType}
+                                        beatType={'triplet'}
+                                    />
                                     <Clear onClear={clearTracks} />
                                 </div>
                             </div>

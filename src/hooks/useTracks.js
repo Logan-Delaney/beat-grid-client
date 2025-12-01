@@ -25,12 +25,10 @@ export const useTracks = (samplesRef, synthsRef, samplesLoaded, synthsLoaded, me
             return prev.map(track => ({
                 ...track,
                 beats: track.beats.map(beat => {
-                    // If already this type, leave it alone
                     if (beat.type === beatType) {
                         return beat;
                     }
 
-                    // Otherwise convert and clear notes
                     return {
                         ...beat,
                         type: beatType,
