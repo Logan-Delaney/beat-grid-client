@@ -20,6 +20,27 @@ export const useTracks = (samplesRef, synthsRef, samplesLoaded, synthsLoaded, me
         setTracks(prev => changeBeatTypeInTracks(prev, trackIndex, beatIndex, newType));
     }, []);
 
+    const setAllBeatsToType = useCallback((beatType) => {
+        setTracks(prev => {
+            return prev.map(track => ({
+                ...track,
+                beats: track.beats.map(beat => {
+                    if (beat.type === beatType) {
+                        return beat;
+                    }
+
+                    return {
+                        ...beat,
+                        type: beatType,
+                        notes: beatType === 'straight'
+                            ? Array(4).fill(null).map(() => ({ active: 0, pitch: null }))
+                            : Array(3).fill(null).map(() => ({ active: 0, pitch: null }))
+                    };
+                })
+            }));
+        });
+    }, []);
+
     const clearTracks = useCallback(() => {
         setTracks(prev => {
             return prev.map(track => ({
@@ -79,5 +100,5 @@ export const useTracks = (samplesRef, synthsRef, samplesLoaded, synthsLoaded, me
         });
     }, []);
 
-    return { tracks, setTracks, toggleNote, changeBeatType, clearTracks, updateNotePitch, addTrack, removeTrack };
+    return { tracks, setTracks, toggleNote, changeBeatType, clearTracks, updateNotePitch, addTrack, removeTrack, setAllBeatsToType };
 };

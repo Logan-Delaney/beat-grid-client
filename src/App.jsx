@@ -12,11 +12,12 @@ import MeasureControl from "./components/MeasureControl/MeasureControl.jsx";
 import Clear from "./components/Clear/Clear.jsx";
 import PianoRollModal from "./components/PianoRollModal/PianoRollModal.jsx";
 import AddTrackModal from "./components/AddTrackModal/AddTrackModal.jsx";
+import BeatTypeButton from "./components/BeatTypeButton/BeatTypeButton.jsx";
 
 function App() {
     const { samplesRef, synthsRef, samplesLoaded, synthsLoaded} = useAudioSamples();
     const { isPlaying, tempo, play, stop, setBpm, measures, setBars, loop, toggleLoop } = useTransport(120, 1)
-    const { tracks, toggleNote, changeBeatType, clearTracks, updateNotePitch, addTrack, removeTrack } = useTracks(samplesRef, synthsRef, samplesLoaded, synthsLoaded, measures);
+    const { tracks, toggleNote, changeBeatType, clearTracks, updateNotePitch, addTrack, removeTrack, setAllBeatsToType } = useTracks(samplesRef, synthsRef, samplesLoaded, synthsLoaded, measures);
     const { currentStep } = useSequencer(tracks, tempo, samplesRef, synthsRef, isPlaying, measures, loop);
 
     const [pianoRollOpen, setPianoRollOpen] = React.useState(false);
@@ -96,7 +97,19 @@ function App() {
                                 <h2 className="sequencer-title">Sequencer</h2>
                                 <p className="sequencer-subtitle">Click cells to toggle notes</p>
                             </div>
-                            <Clear onClear={clearTracks} />
+                            <div className="header-controls">
+                                <div className="header-controls">
+                                    <BeatTypeButton
+                                        onChangeBeat={setAllBeatsToType}
+                                        beatType={'straight'}
+                                    />
+                                    <BeatTypeButton
+                                        onChangeBeat={setAllBeatsToType}
+                                        beatType={'triplet'}
+                                    />
+                                    <Clear onClear={clearTracks} />
+                                </div>
+                            </div>
                         </div>
 
                         {tracks.map((track, trackIndex) => (
