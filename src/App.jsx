@@ -149,7 +149,7 @@ function App() {
                 {tracks.length < 12 && (
                     <div className="add-track-row">
                         <button className="add-track-button" onClick={openAddTrackModal}>
-                            ➕ Add Track
+                            + Add Track
                         </button>
                     </div>
                 )}
