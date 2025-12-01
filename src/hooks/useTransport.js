@@ -1,10 +1,23 @@
-import { useState, useCallback } from 'react';
+import {useState, useCallback, useEffect} from 'react';
 import * as Tone from 'tone';
 
 export const useTransport = (initialBpm = 120, initialMeasures = 1) => {
     const [isPlaying, setIsPlaying] = useState(false);
     const [tempo, setTempo] = useState(initialBpm);
-    const[measures, setMeasures] = useState(initialMeasures);
+    const [measures, setMeasures] = useState(initialMeasures);
+    const [loop, setLoop] = useState(true);
+
+    useEffect(() => {
+        const handleTransportStop = () => {
+            setIsPlaying(false);
+        };
+
+        Tone.getTransport().on("stop", handleTransportStop);
+
+        return () => {
+            Tone.getTransport().off('stop', handleTransportStop);
+        };
+    }, []);
 
     const play = useCallback(() => {
         if (!isPlaying) {
@@ -31,6 +44,10 @@ export const useTransport = (initialBpm = 120, initialMeasures = 1) => {
         }
     }, []);
 
+    const toggleLoop = useCallback(() => {
+        setLoop(prev => !prev);
+    }, [])
+
     return {
         isPlaying,
         tempo,
@@ -38,6 +55,8 @@ export const useTransport = (initialBpm = 120, initialMeasures = 1) => {
         stop,
         setBpm,
         measures,
-        setBars
+        setBars,
+        loop,
+        toggleLoop,
     };
 };

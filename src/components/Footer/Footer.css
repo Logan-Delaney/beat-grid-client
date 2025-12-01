@@ -1,5 +1,5 @@
 .footer-section {
-    padding-top: 1.75rem;   /* pt-7 */
+    padding-top: 0;   /* pt-7 */
     padding-bottom: 0.75rem; /* pb-3 */
 
     display: flex;
@@ -9,11 +9,12 @@
 
     gap: 1.25rem; /* gap-5 */
 
-    border-top: 1px solid #1f1f1f; /* border-black-300 */
+    /*border-top: 1px solid #1f1f1f; !* border-black-300 *!*/
 }
 
 .footer-text {
     color: #b3b3b3; /* text-white-500 */
     display: flex;
     gap: 0.5rem;
+    font-size: .75rem;
 }

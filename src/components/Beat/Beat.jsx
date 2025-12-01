@@ -6,7 +6,9 @@ function Beat({ tracks, trackIndex, beatIndex, onToggle, onTypeChange, currentSt
     const beat = track.beats[beatIndex];
 
     const getLocalStepIndex = () => {
-        // Count steps from all previous beats in THIS track
+        const trackCurrentStep = currentStep[trackIndex];  // Get this track's current step
+        if (trackCurrentStep === undefined) return null;
+
         let stepCounter = 0;
         for (let i = 0; i < beatIndex; i++) {
             stepCounter += track.beats[i].notes.length;
@@ -15,8 +17,8 @@ function Beat({ tracks, trackIndex, beatIndex, onToggle, onTypeChange, currentSt
         const startStep = stepCounter;
         const endStep = stepCounter + beat.notes.length;
 
-        if (currentStep >= startStep && currentStep < endStep) {
-            return currentStep - startStep;
+        if (trackCurrentStep >= startStep && trackCurrentStep < endStep) {
+            return trackCurrentStep - startStep;
         }
         return null;
     }

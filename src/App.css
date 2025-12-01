@@ -50,7 +50,7 @@ body {
 /* Main Content */
 .app-content {
     flex: 1;
-    padding: 40px 40px 60px;
+    padding: 40px 40px 20px;
     max-width: 1400px;
     width: 100%;
     margin: 0 auto;
@@ -163,6 +163,7 @@ body {
     position: sticky;
     left: 0;
     z-index: 1000;
+    gap: 8px;
 }
 
 .track-label {
@@ -277,7 +278,8 @@ body {
     }
 
     .track-label-wrapper {
-        width: 80px;
+        width: 100px;
+        gap: 4px;
     }
 
     .track-label {
@@ -373,55 +375,57 @@ body {
     box-shadow: 0 3px 12px rgba(74, 158, 255, 0.6);
 }
 
-/* Transport Controls styles */
-.transport-controls {
+.add-track-row {
+    padding: 20px;
     display: flex;
-    gap: 10px;
+    justify-content: center;
 }
 
-.transport-controls button {
-    padding: 10px 24px;
-    font-size: 14px;
-    font-weight: 600;
+.add-track-button {
+    padding: 12px 24px;
+    background-color: #4a9eff;
+    color: white;
     border: none;
     border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
-    font-family: inherit;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
 }
 
-.transport-controls button:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.transport-controls button:not(:disabled):hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.transport-controls button:not(:disabled):active {
-    transform: translateY(0);
-}
-
-.transport-controls button:first-child {
-    background-color: #4a9eff;
-    color: #ffffff;
-}
-
-.transport-controls button:first-child:not(:disabled):hover {
+.add-track-button:hover {
     background-color: #6ab0ff;
+    box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
 }
 
-.transport-controls button:last-child {
-    background-color: #333;
-    color: #ffffff;
-    border: 1px solid #555;
+.remove-track-button {
+    background: none;
+    border: 1px solid #333;
+    color: #888;
+    font-size: 20px;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    opacity: 1;
 }
 
-.transport-controls button:last-child:not(:disabled):hover {
-    background-color: #444;
-    border-color: #666;
+.remove-track-button:hover {
+    background-color: #ff4444;
+    border-color: #ff4444;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .remove-track-button {
+        background-color: #ff4444;
+        border-color: #ff4444;
+        color: white;
+    }
 }

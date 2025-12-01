@@ -1,0 +1,117 @@
+.add-track-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.add-track-modal {
+    background-color: #1a1a1a;
+    border: 2px solid #333;
+    border-radius: 8px;
+    padding: 24px;
+    width: 500px;
+    max-width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.add-track-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 12px;
+}
+
+.add-track-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.category-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.category-tab {
+    flex: 1;
+    padding: 12px;
+    background-color: #0a0a0a;
+    border: 2px solid #333;
+    border-radius: 6px;
+    color: #888;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.category-tab:hover {
+    border-color: #555;
+    color: #aaa;
+}
+
+.category-tab--active {
+    background-color: #4a9eff;
+    border-color: #4a9eff;
+    color: #ffffff;
+}
+
+.instruments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.instrument-button {
+    padding: 16px;
+    background-color: #0a0a0a;
+    border: 2px solid #333;
+    border-radius: 6px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.instrument-button:hover:not(:disabled) {
+    background-color: #252525;
+    border-color: #4a9eff;
+    transform: translateX(4px);
+}
+
+.instrument-button--disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.already-added {
+    font-size: 12px;
+    color: #666;
+    font-weight: 400;
+    margin-left: 8px;
+}
+
+@media (max-width: 768px) {
+    .add-track-modal {
+        width: 95%;
+    }
+}
