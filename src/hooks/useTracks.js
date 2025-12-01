@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { generateTracksFromSamples, generateInitialTrack, createEmptyBeats } from "../utils/trackHelpers.js";
+import { generateInitialTrack, createEmptyBeats } from "../utils/trackHelpers.js";
 import { toggleNoteInTracks, changeBeatTypeInTracks } from "../utils/stateHelpers.js";
 
 export const useTracks = (samplesRef, synthsRef, samplesLoaded, synthsLoaded, measures) => {
