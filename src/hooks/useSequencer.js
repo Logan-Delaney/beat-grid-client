@@ -3,7 +3,7 @@ import * as Tone from 'tone';
 import BEAT_TYPES from '../constants/beatTypes';
 
 const useSequencer = (track, bpm, samplesRef, synthsRef, isPlaying, measures, loop) => {
-    const [currentStep, setCurrentStep] = useState(0);
+    const [currentStep, setCurrentStep] = useState({});
     const partRef = useRef(null);
 
     const buildEvents = (track) => {
@@ -53,7 +53,6 @@ const useSequencer = (track, bpm, samplesRef, synthsRef, isPlaying, measures, lo
             console.log('Event fired at time:', time, 'event:', event);
             if (samplesRef.current[event.instrument]) {
                 samplesRef.current[event.instrument].start(time);
-                setCurrentStep(event.stepNumber);
             }
             else if (synthsRef.current[event.instrument]) {
                 synthsRef.current[event.instrument].triggerAttackRelease(
@@ -61,7 +60,6 @@ const useSequencer = (track, bpm, samplesRef, synthsRef, isPlaying, measures, lo
                     '8n',
                     time,
                 );
-                setCurrentStep(event.stepNumber);
             }
         }, events);
 
@@ -71,10 +69,44 @@ const useSequencer = (track, bpm, samplesRef, synthsRef, isPlaying, measures, lo
         part.start(0);
         partRef.current = part;
 
+        const positionUpdates = [];
+        for (let trackIdx = 0; trackIdx < track.length; trackIdx++) {
+            let stepCounter = 0;
+            for (let i = 0; i < track[trackIdx].beats.length; i++) {
+                const beat = track[trackIdx].beats[i];
+                const beatType = BEAT_TYPES[beat.type];
+                const duration = beatType.duration;
+
+                for (let j = 0; j < beat.notes.length; j++) {
+                    positionUpdates.push({
+                        time: {
+                            '4n': i,
+                            [duration]: j
+                        },
+                        trackIndex: trackIdx,
+                        stepNumber: stepCounter
+                    });
+                    stepCounter++;
+                }
+            }
+        }
+
+        const positionPart = new Tone.Part((time, update) => {
+            setCurrentStep(prev => ({
+                ...prev,
+                [update.trackIndex]: update.stepNumber
+            }));
+        }, positionUpdates);
+
+        positionPart.loop = loop;
+        positionPart.loopEnd = `${measures}:0:0`;
+        positionPart.loopStart = 0;
+        positionPart.start(0);
+
         if (!loop) {
             transport.schedule(() => {
                 transport.stop();
-                setCurrentStep(0);
+                setCurrentStep({});
             }, `${measures}:0:0`);
         }
 
@@ -83,6 +115,7 @@ const useSequencer = (track, bpm, samplesRef, synthsRef, isPlaying, measures, lo
                 partRef.current.dispose();
                 partRef.current = null;
             }
+            positionPart.dispose();
             transport.cancel();
         };
     }, [track, bpm, samplesRef, synthsRef, isPlaying, measures, loop]);
